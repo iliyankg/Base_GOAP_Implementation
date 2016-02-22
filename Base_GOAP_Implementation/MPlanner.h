@@ -4,7 +4,8 @@
 enum MActionTypes
 {
 	badaction = -1, 
-	act_opendoor
+	act_opendoor,
+	num_actions
 };
 
 struct MPlannerNode
@@ -84,8 +85,11 @@ class MPLanner
 			
 			std::vector<MPlannerNode> possibleTransitions;
 
-
-
+			for (int i = 0; i < num_actions; ++i)
+			{
+				//TO DO: ADD PRE-CON CHECK
+				
+			}
 		}
 	}
 

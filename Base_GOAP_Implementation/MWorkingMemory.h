@@ -5,7 +5,7 @@
 enum FACT_TYPES
 {
 	invalid = -1,
-	door
+	fct_door
 };
 
 struct MWMFact
@@ -69,15 +69,21 @@ public:
 	MWMemory() {}
 	~MWMemory() {}
 
-	void GetConfidentFact()
+	int GetConfidentFactIdx(FACT_TYPES type)
 	{
 		MWMFact* tempFact = _facts[0];
 
+		int index = 0;
+
 		for (int i = 0; i < _facts.size(); ++i)
 		{
-			if (_facts[i]->GetFactType() == door && _facts[i]->GetConfidance() > tempFact->GetConfidance())
+			if (_facts[i]->GetFactType() == type && _facts[i]->GetConfidance() > tempFact->GetConfidance())
+			{
 				tempFact = _facts[i];
+				index = i;
+			}
 		}
+		return index;
 	}
 
 	void CreateFact(FACT_TYPES type, bool isDoorOpen)

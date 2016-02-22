@@ -20,22 +20,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MNode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MAgent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MWorkingMemory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MNodeSensor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MPlanner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MActionNodes.h">
+    <ClInclude Include="MActionOpenDoor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

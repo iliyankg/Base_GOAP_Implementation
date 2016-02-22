@@ -117,10 +117,8 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MActionNodes.h" />
+    <ClInclude Include="MActionOpenDoor.h" />
     <ClInclude Include="MAgent.h" />
-    <ClInclude Include="MNode.h" />
-    <ClInclude Include="MNodeSensor.h" />
     <ClInclude Include="MPlanner.h" />
     <ClInclude Include="MWorkingMemory.h" />
   </ItemGroup>

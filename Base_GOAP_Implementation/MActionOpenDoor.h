@@ -2,8 +2,16 @@
 #include <glm.hpp>
 #include "MWorkingMemory.h"
 
+class MAction
+{
+public:
+	MAction() {}
+	~MAction() {}
 
-class MActionOpenDoor
+	virtual MWMemory* ApplyPostCons(MWMemory* state) = 0;
+};
+
+class MActionOpenDoor : public MAction
 {
 private:
 	static const int numPre = 1;
@@ -19,12 +27,14 @@ public:
 
 	void CheckPreCons() {}
 
-	MWMFact* ApplyPostCons(MWMFact* fact)
+	MWMemory* ApplyPostCons(MWMemory* state)
 	{
-		MWMFact* temp = new MWMFact(*fact);
+		MWMemory* temp = new MWMemory(*state);
 
-		if (!temp->GetDoorOpen())
-			temp->SetDoorOpen(true);
+		int doorFactId = temp->GetConfidentFactIdx(fct_door);
+
+		if (!temp->_facts[doorFactId]->GetDoorOpen());
+			temp->_facts[doorFactId]->SetDoorOpen(true);
 
 		return temp;
 	}

@@ -1,7 +1,6 @@
 #pragma once
 #include <glm.hpp>
 #include "MWorkingMemory.h"
-#include "MNodeSensor.h"
 
 class MAgent
 {
@@ -16,8 +15,5 @@ public:
 	glm::vec3 _position;
 	glm::vec3 _orientation;
 
-	MNodeSensor nodeSensor = MNodeSensor(10.0f);
-
 	MWMemory agentMemory;
-
 };

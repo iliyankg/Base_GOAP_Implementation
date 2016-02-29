@@ -1,15 +1,5 @@
 #pragma once
-#include <glm.hpp>
-#include "MWorkingMemory.h"
-
-class MAction
-{
-public:
-	MAction() {}
-	~MAction() {}
-
-	virtual MWMemory* ApplyPostCons(MWMemory* state) = 0;
-};
+#include "MActionh.h"
 
 class MActionOpenDoor : public MAction
 {
@@ -29,6 +19,7 @@ public:
 
 	MWMemory* ApplyPostCons(MWMemory* state)
 	{
+		LOG("Applying Open Door Post Cons");
 		MWMemory* temp = new MWMemory(*state);
 
 		int doorFactId = temp->GetConfidentFactIdx(fct_door);

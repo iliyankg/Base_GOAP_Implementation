@@ -11,16 +11,11 @@ public:
 		_position = pos;
 		_orientation = orient;
 
-		actions.push_back(new MActionOpenDoor());
 	}
 	~MAgent() {}
 
 	glm::vec3 _position;
 	glm::vec3 _orientation;
-
-	std::vector<MWMemory* (MWMemory*)> PostFuncs;
-
-	std::vector<MAction*> actions;
 
 	MWMemory agentMemory;
 };

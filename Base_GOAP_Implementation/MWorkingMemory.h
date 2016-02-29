@@ -18,6 +18,8 @@ struct MWMFact
 			toReturn = false;
 		if (left._position != right._position)
 			toReturn = false;
+
+		return toReturn;
 	}
 	friend inline bool operator!= (const MWMFact& left, const MWMFact& right)
 	{

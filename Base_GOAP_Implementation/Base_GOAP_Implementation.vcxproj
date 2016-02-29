@@ -117,6 +117,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="MActionh.h" />
     <ClInclude Include="MActionOpenDoor.h" />
     <ClInclude Include="MAgent.h" />
     <ClInclude Include="MPlanner.h" />

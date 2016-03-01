@@ -12,20 +12,27 @@ private:
 
 public:
 	MActionOpenDoor()
-	{		
+	{
+		actCost = 1.0f;
 	}
 
-	void CheckPreCons() {}
+	bool CheckPreCons(MWMemory* state)
+	{
+		LOG("Checking Open Door Pres");
+		int factId = state->GetConfidentFactIdx(fct_haskey);
+
+		return state->_facts[factId]->GetHasKey();
+	}
 
 	MWMemory* ApplyPostCons(MWMemory* state)
 	{
 		LOG("Applying Open Door Post Cons");
 		MWMemory* temp = new MWMemory(*state);
 
-		int doorFactId = temp->GetConfidentFactIdx(fct_door);
+		int factId = temp->GetConfidentFactIdx(fct_door);
 
-		if (!temp->_facts[doorFactId]->GetDoorOpen());
-			temp->_facts[doorFactId]->SetDoorOpen(true);
+		if (!temp->_facts[factId]->GetDoorOpen());
+			temp->_facts[factId]->SetDoorOpen(true);
 
 		return temp;
 	}

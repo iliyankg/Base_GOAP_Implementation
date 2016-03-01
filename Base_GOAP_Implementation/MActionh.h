@@ -1,5 +1,4 @@
 #pragma once
-#define LOG(toLog) (std::cout << toLog << std::endl);
 #include "MWorkingMemory.h"
 
 class MAction
@@ -10,5 +9,6 @@ public:
 
 	float actCost;
 
+	virtual bool CheckPreCons(MWMemory* state) = 0;
 	virtual MWMemory* ApplyPostCons(MWMemory* state) = 0;
 };

@@ -5,11 +5,13 @@
 
 #include "MWorkingMemory.h"
 #include "MActionOpenDoor.h"
+#include "MActionGetKey.h"
 
 enum MActionTypes
 {
 	badaction = -1, 
 	act_opendoor,
+	act_getkey,
 	num_actions
 };
 
@@ -42,6 +44,7 @@ public:
 	{
 		LOG("Created Planner")
 		allActions.push_back(new MActionOpenDoor());
+		allActions.push_back(new MActionGetKey());
 	}
 	~MPLanner() {}
 
@@ -67,17 +70,18 @@ public:
 		MPlannerNode tempStart;
 		tempStart.stateAtNode = start;
 		tempStart.action_edge = badaction;
-		tempStart.g = 0;
+		tempStart.g = 10000.0f;
 		tempStart.h = CalculateHeuristic(start, goal);
+		tempStart.f = tempStart.h + tempStart.g;
 		openSet.push_back(tempStart);
 		
 		do
 		{
-			MPlannerNode current = openSet[0];
+			MPlannerNode* current = new MPlannerNode(openSet[0]);
 			openSet.erase(openSet.begin());
-			closedSet.push_back(current);
+			closedSet.push_back(*current);
 
-			if (current.stateAtNode == goal)
+			if (current->stateAtNode == goal)
 			{
 				LOG("Plan Found");
 				isRouteFound = true;
@@ -89,36 +93,39 @@ public:
 			{
 				for (int i = 0; i < num_actions; ++i)
 				{
-					//TO DO: ADD PRE-CON CHECK
-					MPlannerNode tempNode;
-
-					tempNode.stateAtNode = *allActions[i]->ApplyPostCons(&current.stateAtNode);
-					tempNode.action_edge = (MActionTypes)i;
-					tempNode.cameFrom = &current;
-
-					tempNode.g = allActions[i]->actCost + current.g;
-					tempNode.h = CalculateHeuristic(tempNode.stateAtNode, goal);
-					tempNode.f = tempNode.g + tempNode.h;
-
-					//Check if in closed
-					if (!IsInClosed(tempNode))
+					//Precondition check
+					if (allActions[i]->CheckPreCons(&current->stateAtNode))
 					{
-						LOG("Not In Closed");
+						MPlannerNode tempNode;
 
-						int idx;
-						if (!IsInOpen(tempNode, idx))
+						tempNode.stateAtNode = *allActions[i]->ApplyPostCons(&current->stateAtNode);
+						tempNode.action_edge = (MActionTypes)i;
+						tempNode.cameFrom = current;
+
+						tempNode.g = allActions[i]->actCost + current->g;
+						tempNode.h = CalculateHeuristic(tempNode.stateAtNode, goal);
+						tempNode.f = tempNode.g + tempNode.h;
+
+						//Check if in closed
+						if (!IsInClosed(tempNode))
 						{
-							LOG("Not In Opened");
-							OrderedInsertion(openSet, tempNode);
-						}
-						else
-						{
-							LOG("In Opened");
-							if (current.f + CalculateHeuristic(current.stateAtNode, tempNode.stateAtNode) < openSet[idx].f)
+							LOG("Not In Closed");
+
+							int idx;
+							if (!IsInOpen(tempNode, idx))
 							{
-								openSet[idx].g = current.g + CalculateHeuristic(current.stateAtNode, openSet[idx].stateAtNode);
-								openSet[idx].f = openSet[idx].g + openSet[idx].h;
-								openSet[idx].cameFrom = &current;
+								LOG("Not In Opened");
+								OrderedInsertion(openSet, tempNode);
+							}
+							else
+							{
+								LOG("In Opened");
+								if (current->f + CalculateHeuristic(current->stateAtNode, tempNode.stateAtNode) < openSet[idx].f)
+								{
+									openSet[idx].g = current->g + CalculateHeuristic(current->stateAtNode, openSet[idx].stateAtNode);
+									openSet[idx].f = openSet[idx].g + openSet[idx].h;
+									openSet[idx].cameFrom = current;
+								}
 							}
 						}
 					}

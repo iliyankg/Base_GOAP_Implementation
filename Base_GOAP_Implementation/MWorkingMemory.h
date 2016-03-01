@@ -1,11 +1,14 @@
 #pragma once
+#define LOG(toLog) (std::cout << toLog << std::endl);
+
 #include <vector>
 #include <unordered_map>
 
 enum FACT_TYPES
 {
 	invalid = -1,
-	fct_door
+	fct_door,
+	fct_haskey
 };
 
 struct MWMFact
@@ -16,7 +19,7 @@ struct MWMFact
 
 		if (left._doorOpen != right._doorOpen)
 			toReturn = false;
-		if (left._position != right._position)
+		if (left._hasKey != right._hasKey)
 			toReturn = false;
 
 		return toReturn;
@@ -38,8 +41,10 @@ struct MWMFact
 	FACT_TYPES	GetFactType() { return _fact_type; }
 	float		GetConfidance() { return _confidance; }
 	bool		GetDoorOpen() { return _doorOpen; }	
+	bool		GetHasKey() { return _hasKey; }
 
 	void		SetDoorOpen(bool val) { _doorOpen = val; }
+	void		SetHasKey(bool val) { _hasKey = val; }
 
 	glm::vec3 GetPosition() { return _position; }
 
@@ -49,6 +54,7 @@ private:
 
 	glm::vec3 _position;
 	bool _doorOpen;
+	bool _hasKey;
 };
 
 class MWMemory
@@ -58,7 +64,7 @@ public:
 	{
 		for (int i = 0; i < left._facts.size(); ++i)
 		{
-			if (left._facts[i] != right._facts[i])
+			if (*left._facts[i] != *right._facts[i])
 				return false;
 		}
 		return true;
@@ -79,7 +85,7 @@ public:
 
 		for (int i = 0; i < _facts.size(); ++i)
 		{
-			if (_facts[i]->GetFactType() == type && _facts[i]->GetConfidance() > tempFact->GetConfidance())
+			if (_facts[i]->GetFactType() == type && _facts[i]->GetConfidance() >= tempFact->GetConfidance())
 			{
 				tempFact = _facts[i];
 				index = i;
@@ -88,10 +94,21 @@ public:
 		return index;
 	}
 
-	void CreateFact(FACT_TYPES type, bool isDoorOpen)
+	void CreateFact(FACT_TYPES type, bool val)
 	{
 		MWMFact* tempFact = new MWMFact(type);
-		tempFact->SetDoorOpen(isDoorOpen);
+		
+		switch (type)
+		{
+		case fct_door:
+			tempFact->SetDoorOpen(val);
+			break;
+		case fct_haskey:
+			tempFact->SetHasKey(val);
+			break;
+		default:
+			break;
+		}
 
 		_facts.push_back(tempFact);
 		_facts.back()->ID = _facts.size() - 1;

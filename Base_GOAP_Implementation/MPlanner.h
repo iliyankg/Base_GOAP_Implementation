@@ -7,13 +7,7 @@
 #include "MActionOpenDoor.h"
 #include "MActionGetKey.h"
 
-enum MActionTypes
-{
-	badaction = -1, 
-	act_opendoor,
-	act_getkey,
-	num_actions
-};
+
 
 struct MPlannerNode
 {

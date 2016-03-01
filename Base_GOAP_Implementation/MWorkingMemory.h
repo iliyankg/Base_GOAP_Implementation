@@ -2,7 +2,6 @@
 #define LOG(toLog) (std::cout << toLog << std::endl);
 
 #include <vector>
-#include <unordered_map>
 
 enum FACT_TYPES
 {

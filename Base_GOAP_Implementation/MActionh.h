@@ -1,6 +1,14 @@
 #pragma once
 #include "MWorkingMemory.h"
 
+enum MActionTypes
+{
+	badaction = -1,
+	act_opendoor,
+	act_getkey,
+	num_actions
+};
+
 class MAction
 {
 public:

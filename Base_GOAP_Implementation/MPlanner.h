@@ -1,16 +1,23 @@
+/** @file MAction.h
+*   @brief Contains the MPlannerNode class; MPlanner class;
+* 
+*	The planner uses A Star pathfinding to run through the possible world states
+*	reachable via the potential actions. 
+*
+*  @author Iliyan Georgiev
+*  @bug No known bugs.
+*/
+
 #pragma once
-
-
 #include <iostream>
 
 #include "MWorkingMemory.h"
 #include "MActionOpenDoor.h"
 #include "MActionGetKey.h"
 
-
-
 struct MPlannerNode
 {
+	//Operator overloads
 	friend bool operator== (const MPlannerNode& left, const MPlannerNode& right)
 	{
 		if (left.action_edge == right.action_edge && left.stateAtNode == right.stateAtNode)
@@ -23,12 +30,12 @@ struct MPlannerNode
 		return !(left == right);
 	}
 
-	MWMemory stateAtNode;
-	float g;
-	float h;
-	float f;
-	MActionTypes action_edge;
-	MPlannerNode* cameFrom;
+	MWMemory stateAtNode;		//World state at node.
+	float g;					//Traverse cost so far
+	float h;					//Huristic at node.
+	float f;					//G + H cost 
+	MActionTypes action_edge;	//Action used to get to this node.
+	MPlannerNode* cameFrom;		//Node arived from
 };
 
 class MPLanner
@@ -41,17 +48,34 @@ public:
 		allActions.push_back(new MActionGetKey());
 	}
 	~MPLanner() {}
-
+	
+	//All possible actions
 	std::vector<MAction*> allActions;
 
+	/** @brief Prints the final plan
+	*
+	* @return Void
+	*/
 	void PrintPlan()
 	{
 		std::cout << "TOP ZOZZLE" << std::endl;
 	}
 
-	std::vector<MPlannerNode> openSet;
-	std::vector<MPlannerNode> closedSet;
+	
+	std::vector<MPlannerNode> openSet;		//Open set at for A Star
+	std::vector<MPlannerNode> closedSet;	//Closed  set for A Star
 
+
+
+	/** @brief Creates a set of actions to go from the start to the goal state.
+	*
+	* Uses A Star to go through the graph of world states and come up with a set of actions 
+	* that satisfy the current goal state. 
+	*
+	* @param start Start world state.
+	* @param goal Goal World state.
+	* @return void
+	*/
 	void Plan(MWMemory& start, MWMemory& goal)
 	{
 		LOG("Starting Planning");
@@ -129,6 +153,12 @@ public:
 	}
 
 private:
+	/** @brief Gets the i
+	*
+	* @param state The state for which to find 
+	* @param goal Goal World state.
+	* @return int Index
+	*/
 	int OpenIdx(MWMemory& state)
 	{
 		for (int i = 0; i < openSet.size(); ++i)

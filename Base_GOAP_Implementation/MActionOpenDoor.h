@@ -31,8 +31,7 @@ public:
 
 		int factId = temp->GetConfidentFactIdx(fct_door);
 
-		if (!temp->_facts[factId]->GetDoorOpen());
-			temp->_facts[factId]->SetDoorOpen(true);
+		temp->_facts[factId]->SetDoorOpen(true);
 
 		return temp;
 	}

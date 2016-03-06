@@ -1,3 +1,10 @@
+/** @file MAction.h
+*   @brief Contains MWMFact class; MWMemory class; and fact types as enumerated list.
+*
+*  @author Iliyan Georgiev
+*  @bug No known bugs.
+*/
+
 #pragma once
 #define LOG(toLog) (std::cout << toLog << std::endl);
 
@@ -12,6 +19,7 @@ enum FACT_TYPES
 
 struct MWMFact
 {
+	//Operator overloads
 	friend inline bool operator== (const MWMFact& left, const MWMFact& right)
 	{		
 		bool toReturn = true;
@@ -35,30 +43,34 @@ struct MWMFact
 		_confidance = 1.0f;
 	}
 
+	//Fact ID
 	int ID;
 
+	//Getters
 	FACT_TYPES	GetFactType() { return _fact_type; }
 	float		GetConfidance() { return _confidance; }
 	bool		GetDoorOpen() { return _doorOpen; }	
 	bool		GetHasKey() { return _hasKey; }
+	
+	glm::vec3 GetPosition() { return _position; }
 
+	//Setters
 	void		SetDoorOpen(bool val) { _doorOpen = val; }
 	void		SetHasKey(bool val) { _hasKey = val; }
 
-	glm::vec3 GetPosition() { return _position; }
-
 private:
-	FACT_TYPES _fact_type;
-	float _confidance;
+	FACT_TYPES _fact_type;	//Fact type
+	float _confidance;		//Fact confidance value
 
-	glm::vec3 _position;
-	bool _doorOpen;
-	bool _hasKey;
+	glm::vec3 _position;	//Position
+	bool _doorOpen;			//Door open or not
+	bool _hasKey;			//Has key or not
 };
 
 class MWMemory
 {
 public:
+	//Operator Overloads
 	friend inline bool operator== (const MWMemory& left, const MWMemory& right)
 	{
 		for (int i = 0; i < left._facts.size(); ++i)
@@ -76,6 +88,11 @@ public:
 	MWMemory() {}
 	~MWMemory() {}
 
+	/** @brief Returns an index to the fact with highest cofidance.
+	*
+	* @param type Type of fact to look for.
+	* @return Index to the highest confidance fact.
+	*/
 	int GetConfidentFactIdx(FACT_TYPES type)
 	{
 		MWMFact* tempFact = _facts[0];
@@ -93,6 +110,12 @@ public:
 		return index;
 	}
 
+	/** @brief Creates a fact with the specified value for a default.
+	*
+	* @param type Type of fact to look for.
+	* @param val Value to default the fact to.
+	* @return void
+	*/
 	void CreateFact(FACT_TYPES type, bool val)
 	{
 		MWMFact* tempFact = new MWMFact(type);
@@ -113,5 +136,6 @@ public:
 		_facts.back()->ID = _facts.size() - 1;
 	}
 	
+	//All facts in memory.
 	std::vector<MWMFact*> _facts;
 };

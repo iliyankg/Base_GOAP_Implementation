@@ -32,10 +32,13 @@
     <ClInclude Include="MActionOpenDoor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MActionh.h">
+    <ClInclude Include="MActionGetKey.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MActionGetKey.h">
+    <ClInclude Include="MActionBashDoor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -13,6 +13,7 @@ enum MActionTypes
 	badaction = -1,
 	act_opendoor,
 	act_getkey,
+	act_bashdoor,
 	num_actions
 };
 
@@ -40,5 +41,5 @@ public:
 	* @param state Current state to modify.
 	* @return A pointer ot the NEWed world state with the post conditions applied to it.
 	*/
-	virtual MWMemory* ApplyPostCons(MWMemory* state) = 0;
+	virtual MWMemory ApplyPostCons(MWMemory state) = 0;
 };

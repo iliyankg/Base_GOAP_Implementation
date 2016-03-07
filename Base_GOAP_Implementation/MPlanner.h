@@ -14,6 +14,7 @@
 #include "MWorkingMemory.h"
 #include "MActionOpenDoor.h"
 #include "MActionGetKey.h"
+#include "MActionBashDoor.h"
 
 struct MPlannerNode
 {
@@ -43,9 +44,11 @@ class MPLanner
 public:
 	MPLanner() 
 	{
-		LOG("Created Planner")
-		allActions.push_back(new MActionOpenDoor());
+		LOG("Created Planner");
 		allActions.push_back(new MActionGetKey());
+		allActions.push_back(new MActionOpenDoor());
+		
+		allActions.push_back(new MActionBashDoor());
 	}
 	~MPLanner() {}
 	
@@ -56,16 +59,26 @@ public:
 	*
 	* @return Void
 	*/
-	void PrintPlan()
+	void PrintPlan(MWMemory& goal, MWMemory& start)
 	{
+		MPlannerNode tempGoal;
+
+		for (int i = 0; i < closedSet.size(); ++i)
+			if (goal == closedSet[i].stateAtNode)
+				tempGoal = closedSet[i];
+
+		LOG(tempGoal.action_edge);
+		do
+		{
+			tempGoal = *tempGoal.cameFrom;
+			LOG(tempGoal.action_edge);
+		} while (tempGoal.stateAtNode != start);
+
 		std::cout << "TOP ZOZZLE" << std::endl;
 	}
 
-	
 	std::vector<MPlannerNode> openSet;		//Open set at for A Star
 	std::vector<MPlannerNode> closedSet;	//Closed  set for A Star
-
-
 
 	/** @brief Creates a set of actions to go from the start to the goal state.
 	*
@@ -82,13 +95,13 @@ public:
 
 		bool isRouteFound = false;
 
-		openSet.clear();
+		
 		closedSet.clear();
 		
 		MPlannerNode tempStart;
 		tempStart.stateAtNode = start;
 		tempStart.action_edge = badaction;
-		tempStart.g = 10000.0f;
+		tempStart.g = 0.0f;
 		tempStart.h = CalculateHeuristic(start, goal);
 		tempStart.f = tempStart.h + tempStart.g;
 		openSet.push_back(tempStart);
@@ -99,11 +112,13 @@ public:
 			openSet.erase(openSet.begin());
 			closedSet.push_back(*current);
 
+			openSet.clear();
+			
 			if (current->stateAtNode == goal)
 			{
 				LOG("Plan Found");
 				isRouteFound = true;
-				PrintPlan();
+				PrintPlan(goal, start);
 				return;
 			}
 
@@ -116,7 +131,7 @@ public:
 					{
 						MPlannerNode tempNode;
 
-						tempNode.stateAtNode = *allActions[i]->ApplyPostCons(&current->stateAtNode);
+						tempNode.stateAtNode = allActions[i]->ApplyPostCons(current->stateAtNode);
 						tempNode.action_edge = (MActionTypes)i;
 						tempNode.cameFrom = current;
 
@@ -142,54 +157,50 @@ public:
 								{
 									openSet[idx].g = current->g + CalculateHeuristic(current->stateAtNode, openSet[idx].stateAtNode);
 									openSet[idx].f = openSet[idx].g + openSet[idx].h;
+									openSet[idx].action_edge = (MActionTypes)i;
 									openSet[idx].cameFrom = current;
 								}
 							}
 						}
 					}
-				}
+				} 
 			}
 		} while (!openSet.empty() && !isRouteFound);
 	}
 
 private:
-	/** @brief Gets the i
+
+	/** @brief Calculates the heuristic between two world states.
 	*
-	* @param state The state for which to find 
-	* @param goal Goal World state.
-	* @return int Index
+	* Currently the heuristic is the number of different facts 
+	* between the current state and the goal state.
+	*
+	* @param MWMemory stateFrom Starting state.
+	* @param MWMemory stateTo State to go to.
+	* @return float heuristic
 	*/
-	int OpenIdx(MWMemory& state)
-	{
-		for (int i = 0; i < openSet.size(); ++i)
-			if (openSet[i].stateAtNode == state)
-				return i;
-
-		return -1;
-	}
-
-	int ClosedIdx(MWMemory& state)
-	{
-		for (int i = 0; i < closedSet.size(); ++i)
-			if (closedSet[i].stateAtNode == state)
-				return i;
-
-		return -1;
-	}
-
 	float CalculateHeuristic(MWMemory& stateFrom, MWMemory& stateTo)
 	{
 		float counter = 0;
 
 		for (int i = 0; i < stateFrom._facts.size(); ++i)
 		{
-			if (*stateFrom._facts[i] != *stateTo._facts[i])
+			if (stateFrom._facts[i] != stateTo._facts[i])
 				counter++;
 		}
 
 		return counter;
 	}
 
+	/** @brief Inserts a MPLannerNode in a given container.
+	*
+	* It acts like a priority queue where the value used to sort 
+	* the Nodes is the 'F' cost of each node
+	*
+	* @param vector<MPlannerNode> vec Container to insert into.
+	* @param MPlannerNode toInsert State to go to.
+	* @return void
+	*/
 	void OrderedInsertion(std::vector<MPlannerNode> &vec, MPlannerNode toInsert)
 	{
 		int counter = 0;

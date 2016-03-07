@@ -8,6 +8,7 @@
 #pragma once
 #define LOG(toLog) (std::cout << toLog << std::endl);
 
+#include <iostream>
 #include <vector>
 
 enum FACT_TYPES
@@ -75,7 +76,7 @@ public:
 	{
 		for (int i = 0; i < left._facts.size(); ++i)
 		{
-			if (*left._facts[i] != *right._facts[i])
+			if (left._facts[i] != right._facts[i])
 				return false;
 		}
 		return true;
@@ -95,13 +96,13 @@ public:
 	*/
 	int GetConfidentFactIdx(FACT_TYPES type)
 	{
-		MWMFact* tempFact = _facts[0];
+		MWMFact tempFact = _facts[0];
 
 		int index = 0;
 
 		for (int i = 0; i < _facts.size(); ++i)
 		{
-			if (_facts[i]->GetFactType() == type && _facts[i]->GetConfidance() >= tempFact->GetConfidance())
+			if (_facts[i].GetFactType() == type && _facts[i].GetConfidance() >= tempFact.GetConfidance())
 			{
 				tempFact = _facts[i];
 				index = i;
@@ -118,24 +119,24 @@ public:
 	*/
 	void CreateFact(FACT_TYPES type, bool val)
 	{
-		MWMFact* tempFact = new MWMFact(type);
+		MWMFact tempFact = MWMFact(type);
 		
 		switch (type)
 		{
 		case fct_door:
-			tempFact->SetDoorOpen(val);
+			tempFact.SetDoorOpen(val);
 			break;
 		case fct_haskey:
-			tempFact->SetHasKey(val);
+			tempFact.SetHasKey(val);
 			break;
 		default:
 			break;
 		}
 
 		_facts.push_back(tempFact);
-		_facts.back()->ID = _facts.size() - 1;
+		_facts.back().ID = _facts.size() - 1;
 	}
 	
 	//All facts in memory.
-	std::vector<MWMFact*> _facts;
+	std::vector<MWMFact> _facts;
 };

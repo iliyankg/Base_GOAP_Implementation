@@ -1,7 +1,7 @@
 #pragma once
 #include "MAction.h"
 
-class MActionOpenDoor : public MAction
+class MActionBashDoor : public MAction
 {
 private:
 	static const int numPre = 1;
@@ -11,22 +11,26 @@ private:
 	float _distance = 1.0f;
 
 public:
-	MActionOpenDoor()
+	MActionBashDoor()
 	{
-		actCost = 1.0f;
+		actCost = 10.0f;
 	}
+
+	void CheckPreCons() {}
 
 	bool CheckPreCons(MWMemory* state)
 	{
-		LOG("Checking Open Door Pres");
+		LOG("Checking Bash Door Pres");
 		int factId = state->GetConfidentFactIdx(fct_haskey);
 
-		return state->_facts[factId].GetHasKey();
+		return true;
+
+		return !state->_facts[factId].GetHasKey();
 	}
 
 	MWMemory ApplyPostCons(MWMemory state)
 	{
-		LOG("Applying Open Door Post Cons");
+		LOG("Applying Bash Door Post Cons");
 		int factId = state.GetConfidentFactIdx(fct_door);
 
 		state._facts[factId].SetDoorOpen(true);

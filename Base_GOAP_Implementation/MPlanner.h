@@ -45,9 +45,8 @@ public:
 	MPLanner() 
 	{
 		LOG("Created Planner");
-		allActions.push_back(new MActionGetKey());
 		allActions.push_back(new MActionOpenDoor());
-		
+		allActions.push_back(new MActionGetKey());
 		allActions.push_back(new MActionBashDoor());
 	}
 	~MPLanner() {}
@@ -102,7 +101,7 @@ public:
 		tempStart.stateAtNode = start;
 		tempStart.action_edge = badaction;
 		tempStart.g = 0.0f;
-		tempStart.h = CalculateHeuristic(start, goal);
+  		tempStart.h = CalculateHeuristic(start, goal);
 		tempStart.f = tempStart.h + tempStart.g;
 		openSet.push_back(tempStart);
 		
@@ -183,12 +182,21 @@ private:
 	{
 		float counter = 0;
 
-		for (int i = 0; i < stateFrom._facts.size(); ++i)
+		for (int i = 0; i < stateTo._facts.size(); ++i)
 		{
-			if (stateFrom._facts[i] != stateTo._facts[i])
-				counter++;
-		}
+			int idx = stateFrom.GetConfidentFactIdx(stateTo._facts[i].GetFactType());
 
+			if (idx == -1)
+			{
+				counter++;
+			}
+			else
+			{
+				if (stateFrom._facts[idx] != stateTo._facts[i])
+					counter++;
+			}
+			
+		}
 		return counter;
 	}
 

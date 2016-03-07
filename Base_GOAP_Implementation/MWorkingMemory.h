@@ -98,7 +98,7 @@ public:
 	{
 		MWMFact tempFact = _facts[0];
 
-		int index = 0;
+		int index = -1;
 
 		for (int i = 0; i < _facts.size(); ++i)
 		{

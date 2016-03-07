@@ -13,7 +13,7 @@ private:
 public:
 	MActionGetKey()
 	{
-		actCost = 100.0f;
+		actCost = 1.0f;
 	}
 
 	void CheckPreCons() {}

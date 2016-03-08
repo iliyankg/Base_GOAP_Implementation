@@ -13,7 +13,7 @@ private:
 public:
 	MActionBashDoor()
 	{
-		actCost = 10.0f;
+		actCost = 4.0f;
 	}
 
 	void CheckPreCons() {}

@@ -25,7 +25,7 @@ int main()
 
 	MWMemory goal; 
 	goal.CreateFact(fct_door, true);
-	goal.CreateFact(fct_haskey, false);
+	//goal.CreateFact(fct_haskey, false);
 
 	planner.Plan(testing.agentMemory, goal);
 

@@ -13,7 +13,7 @@ private:
 public:
 	MActionOpenDoor()
 	{
-		actCost = 1.0f;
+		actCost = 2.0f;
 	}
 
 	bool CheckPreCons(MWMemory* state)

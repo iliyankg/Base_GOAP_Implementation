@@ -113,7 +113,7 @@ public:
 
 			openSet.clear();
 			
-			if (current->stateAtNode == goal)
+			if (MWMemory::IsGoalReached(current->stateAtNode, goal))
 			{
 				LOG("Plan Found");
 				isRouteFound = true;

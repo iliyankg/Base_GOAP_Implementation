@@ -86,6 +86,34 @@ public:
 		return !(left == right);
 	}
 
+
+	/** @brief Specific comparator method for a reached goal
+	*
+	* @param current State to check.
+	* @param goal Goal to check against.
+	* @return Returns true if goal is satisfied.
+	*/
+	static inline bool IsGoalReached(MWMemory& current, MWMemory& goal)
+	{
+		float counter = 0;
+
+		for (int i = 0; i < goal._facts.size(); ++i)
+		{
+			int idx = current.GetConfidentFactIdx(current._facts[i].GetFactType());
+
+			if (idx == -1)
+			{
+				return false ;
+			}
+			else
+			{
+				if (current._facts[idx] != goal._facts[i])
+					return false;
+			}
+		}
+		return true;
+	}
+
 	MWMemory() {}
 	~MWMemory() {}
 

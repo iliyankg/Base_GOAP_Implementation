@@ -30,8 +30,11 @@ public:
 	{
 		LOG("Applying Get Key Post Cons");
 		int factId = state.GetConfidentFactIdx(fct_haskey);
-	
-		state._facts[factId].SetHasKey(true);
+		
+		if (factId == -1)
+			state.CreateFact(fct_haskey, true);
+		else
+			state._facts[factId].SetHasKey(true);
 
 		return state;
 	}

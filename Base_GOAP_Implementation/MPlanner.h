@@ -88,12 +88,13 @@ public:
 	* @param goal Goal World state.
 	* @return void
 	*/
-	void Plan(MWMemory& start, MWMemory& goal)
+	void Plan(MAgent& agent, MWMemory& goal)
 	{
 		LOG("Starting Planning");
 
-		bool isRouteFound = false;
+		MWMemory start = agent.agentMemory;
 
+		bool isRouteFound = false;
 		
 		closedSet.clear();
 		
@@ -123,18 +124,19 @@ public:
 
 			if (!isRouteFound)
 			{
-				for (int i = 0; i < num_actions; ++i)
+				for (int i = 0; i < agent.numAvailableActions; ++i)
 				{
+					int actIndex = agent.agentActions[i];
 					//Precondition check
-					if (allActions[i]->CheckPreCons(&current->stateAtNode))
+					if (allActions[actIndex]->CheckPreCons(&current->stateAtNode))
 					{
 						MPlannerNode tempNode;
 
-						tempNode.stateAtNode = allActions[i]->ApplyPostCons(current->stateAtNode);
-						tempNode.action_edge = (MActionTypes)i;
+						tempNode.stateAtNode = allActions[actIndex]->ApplyPostCons(current->stateAtNode);
+						tempNode.action_edge = (MActionTypes)actIndex;
 						tempNode.cameFrom = current;
 
-						tempNode.g = allActions[i]->actCost + current->g;
+						tempNode.g = allActions[actIndex]->actCost + current->g;
 						tempNode.h = CalculateHeuristic(tempNode.stateAtNode, goal);
 						tempNode.f = tempNode.g + tempNode.h;
 

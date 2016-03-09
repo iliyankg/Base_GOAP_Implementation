@@ -27,7 +27,7 @@ int main()
 	goal.CreateFact(fct_door, true);
 	//goal.CreateFact(fct_haskey, false);
 
-	planner.Plan(testing.agentMemory, goal);
+	planner.Plan(testing, goal);
 
 	std::cin.get();
 	return 0;

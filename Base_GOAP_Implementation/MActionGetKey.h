@@ -4,10 +4,6 @@
 class MActionGetKey : public MAction
 {
 private:
-	static const int numPre = 1;
-	static const int numPost = 1;
-
-
 	float _distance = 1.0f;
 
 public:

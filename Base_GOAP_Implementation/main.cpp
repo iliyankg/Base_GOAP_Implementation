@@ -20,12 +20,11 @@ bool a(MWMemory& left, MWMemory& right)
 
 int main()
 {
-	testing.agentMemory.CreateFact(fct_door, false);
-	testing.agentMemory.CreateFact(fct_haskey, false);
+	testing.agentMemory.CreateFact(fct_door, false, 100.0f);
+	testing.agentMemory.CreateFact(fct_haskey, false, 0.0f);
 
 	MWMemory goal; 
-	goal.CreateFact(fct_door, true);
-	//goal.CreateFact(fct_haskey, false);
+	goal.CreateFact(fct_door, true, 0.0f);
 
 	planner.Plan(testing, goal);
 

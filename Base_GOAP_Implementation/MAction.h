@@ -14,6 +14,7 @@ enum MActionTypes
 	act_opendoor,
 	act_getkey,
 	act_bashdoor,
+	act_damageenemy,
 	num_actions
 };
 

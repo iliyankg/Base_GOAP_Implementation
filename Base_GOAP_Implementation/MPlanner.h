@@ -15,6 +15,7 @@
 #include "MActionOpenDoor.h"
 #include "MActionGetKey.h"
 #include "MActionBashDoor.h"
+#include "MActionDamageEnemy.h"
 
 struct MPlannerNode
 {
@@ -48,6 +49,7 @@ public:
 		allActions.push_back(new MActionOpenDoor());
 		allActions.push_back(new MActionGetKey());
 		allActions.push_back(new MActionBashDoor());
+		allActions.push_back(new MActionDamageEnemy());
 	}
 	~MPLanner() {}
 	

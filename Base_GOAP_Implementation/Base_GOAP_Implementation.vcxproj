@@ -118,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MActionBashDoor.h" />
+    <ClInclude Include="MActionDamageEnemy.h" />
     <ClInclude Include="MActionGetKey.h" />
     <ClInclude Include="MAction.h" />
     <ClInclude Include="MActionOpenDoor.h" />

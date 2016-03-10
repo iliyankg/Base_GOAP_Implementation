@@ -15,7 +15,8 @@ enum FACT_TYPES
 {
 	invalid = -1,
 	fct_door,
-	fct_haskey
+	fct_haskey,
+	fct_enemyhealth
 };
 
 struct MWMFact
@@ -28,6 +29,8 @@ struct MWMFact
 		if (left._doorOpen != right._doorOpen)
 			toReturn = false;
 		if (left._hasKey != right._hasKey)
+			toReturn = false;
+		if (left._enemyHealth != right._enemyHealth)
 			toReturn = false;
 
 		return toReturn;
@@ -52,12 +55,14 @@ struct MWMFact
 	float		GetConfidance() { return _confidance; }
 	bool		GetDoorOpen() { return _doorOpen; }	
 	bool		GetHasKey() { return _hasKey; }
-	
+	float		GetEnemyHealth() { return _enemyHealth; }
+
 	glm::vec3 GetPosition() { return _position; }
 
 	//Setters
 	void		SetDoorOpen(bool val) { _doorOpen = val; }
 	void		SetHasKey(bool val) { _hasKey = val; }
+	void		SetEnemyHealth(float val) { _enemyHealth = val; }
 
 private:
 	FACT_TYPES _fact_type;	//Fact type
@@ -66,6 +71,7 @@ private:
 	glm::vec3 _position;	//Position
 	bool _doorOpen;			//Door open or not
 	bool _hasKey;			//Has key or not
+	float _enemyHealth;		//Health Value
 };
 
 class MWMemory
@@ -145,7 +151,7 @@ public:
 	* @param val Value to default the fact to.
 	* @return void
 	*/
-	void CreateFact(FACT_TYPES type, bool val)
+	void CreateFact(FACT_TYPES type, bool val, float fval)
 	{
 		MWMFact tempFact = MWMFact(type);
 		
@@ -157,6 +163,8 @@ public:
 		case fct_haskey:
 			tempFact.SetHasKey(val);
 			break;
+		case fct_enemyhealth:
+			tempFact.SetEnemyHealth(fval);
 		default:
 			break;
 		}

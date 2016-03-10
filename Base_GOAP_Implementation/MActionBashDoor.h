@@ -19,9 +19,10 @@ public:
 		LOG("Checking Bash Door Pres");
 		int factId = state->GetConfidentFactIdx(fct_haskey);
 
-		return true;
+		if (factId == -1)
+			return false;
 
-		return !state->_facts[factId].GetHasKey();
+		return true;
 	}
 
 	MWMemory ApplyPostCons(MWMemory state)

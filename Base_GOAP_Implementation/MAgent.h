@@ -16,8 +16,8 @@ public:
 	glm::vec3 _position;
 	glm::vec3 _orientation;
 
-	static const int numAvailableActions = 3;
-	MActionTypes agentActions[numAvailableActions] = { act_opendoor, act_getkey, act_bashdoor };
+	static const int numAvailableActions = 4;
+	MActionTypes agentActions[numAvailableActions] = { act_opendoor, act_getkey, act_bashdoor, act_damageenemy };
 
 	MWMemory agentMemory;
 };

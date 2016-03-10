@@ -9,7 +9,7 @@ private:
 public:
 	MActionGetKey()
 	{
-		actCost = 1.0f;
+		actCost = 10.0f;
 	}
 
 	void CheckPreCons() {}
@@ -18,6 +18,9 @@ public:
 	{
 		LOG("Checking Get Key Pres");
 		int factId = state->GetConfidentFactIdx(fct_haskey);
+
+		if (factId == -1)
+			return false;
 
 		return !state->_facts[factId].GetHasKey();
 	}
@@ -28,7 +31,7 @@ public:
 		int factId = state.GetConfidentFactIdx(fct_haskey);
 		
 		if (factId == -1)
-			state.CreateFact(fct_haskey, true);
+			state.CreateFact(fct_haskey, true, 0.0f);
 		else
 			state._facts[factId].SetHasKey(true);
 

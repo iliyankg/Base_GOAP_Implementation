@@ -17,6 +17,9 @@ public:
 		LOG("Checking Open Door Pres");
 		int factId = state->GetConfidentFactIdx(fct_haskey);
 
+		if (factId == -1)
+			return false;
+
 		return state->_facts[factId].GetHasKey();
 	}
 

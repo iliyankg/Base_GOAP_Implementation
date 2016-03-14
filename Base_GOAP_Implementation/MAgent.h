@@ -2,6 +2,7 @@
 #include <glm.hpp>
 #include "MAction.h"
 #include "MWorkingMemory.h"
+#include "MGoalManager.h"
 
 class MAgent
 {

@@ -44,5 +44,8 @@
     <ClInclude Include="MActionDamageEnemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MGoalManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

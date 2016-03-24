@@ -1,7 +1,8 @@
 #pragma once
 #include "MWorkingMemory.h"
+#include "MAgent.h"
 
-enum MGoals
+enum MGoalTypes
 {
 	badgoal = -1,
 	goal_opendoor,
@@ -15,5 +16,10 @@ public:
 	MGoalManager() {}
 	~MGoalManager() {}
 
-	
+	//void CalculateGoalPriorities(MAgent& agent)
+	//{
+	//	 
+	//}
+
+private:
 };

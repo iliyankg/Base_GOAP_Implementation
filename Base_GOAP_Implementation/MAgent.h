@@ -7,18 +7,27 @@
 class MAgent
 {
 public:
-	MAgent(glm::vec3 pos, glm::vec3 orient) 
+	MAgent()
 	{
-		_position = pos;
-		_orientation = orient;
+
 	}
 	~MAgent() {}
 
-	glm::vec3 _position;
-	glm::vec3 _orientation;
-
-	static const int numAvailableActions = 4;
-	MActionTypes agentActions[numAvailableActions] = { act_opendoor, act_getkey, act_bashdoor, act_damageenemy };
+	MActionTypes currentAction = badaction;
+	static const int numAvailableActions = 4; 
+	MActionTypes agentActions[numAvailableActions] = { 
+		act_opendoor,
+		act_getkey,
+		act_bashdoor,
+		act_damageenemy };
+	
+	MGoalTypes currentGoal = badgoal;
+	static const int numAvailableGoals = 2; 
+	MGoalTypes agentGoals[numAvailableGoals] = { 
+		goal_killenemy,
+		goal_opendoor };
+	
+	std::vector<MActionTypes> actionsForCurrentPlan;
 
 	MWMemory agentMemory;
 };

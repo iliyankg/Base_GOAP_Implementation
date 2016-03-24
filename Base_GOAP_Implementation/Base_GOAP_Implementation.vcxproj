@@ -123,6 +123,7 @@
     <ClInclude Include="MAction.h" />
     <ClInclude Include="MActionOpenDoor.h" />
     <ClInclude Include="MAgent.h" />
+    <ClInclude Include="MGoalManager.h" />
     <ClInclude Include="MPlanner.h" />
     <ClInclude Include="MWorkingMemory.h" />
   </ItemGroup>

@@ -29,5 +29,6 @@ public:
 	
 	std::vector<MActionTypes> actionsForCurrentPlan;
 
+	MGoalManager goalManager;
 	MWMemory agentMemory;
 };

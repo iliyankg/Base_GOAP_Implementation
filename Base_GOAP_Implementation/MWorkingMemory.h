@@ -14,8 +14,14 @@
 enum FACT_TYPES
 {
 	invalid = -1,
-	fct_door,
-	fct_haskey,
+	fct_dooropen,
+	fct_hasdoorkey,
+	fct_keypadfixed,
+	fct_toolsforkeypad,
+	fct_toolboxopen,
+	fct_lockpickfortoolbox,
+	fct_keyfortoolbox,
+	fct_keypadcombonote,
 	fct_enemyhealth
 };
 
@@ -24,16 +30,26 @@ struct MWMFact
 	//Operator overloads
 	friend inline bool operator== (const MWMFact& left, const MWMFact& right)
 	{		
-		bool toReturn = true;
-
 		if (left._doorOpen != right._doorOpen)
-			toReturn = false;
-		if (left._hasKey != right._hasKey)
-			toReturn = false;
+			return false;
+		if (left._hasDoorKey != right._hasDoorKey)
+			return false;
+		if (left._iskeypadFixed != right._iskeypadFixed)
+			return false;
+		if(left._hasToolsForKeypad != right._hasToolsForKeypad)
+			return false;
+		if(left._isToolBoxOpened != right._isToolBoxOpened)
+			return false;
+		if(left._hasLockpick != right._hasLockpick)
+			return false;
+		if(left._hasKeyForToolbox != right._hasLockpick)
+			return false;
+		if(left._keypadCombination != right._keypadCombination)
+			return false;
 		if (left._enemyHealth != right._enemyHealth)
-			toReturn = false;
+			return false;
 
-		return toReturn;
+		return true;
 	}
 	friend inline bool operator!= (const MWMFact& left, const MWMFact& right)
 	{
@@ -51,26 +67,42 @@ struct MWMFact
 	int ID;
 
 	//Getters
-	FACT_TYPES	GetFactType() { return _fact_type; }
-	float		GetConfidance() { return _confidance; }
-	bool		GetDoorOpen() { return _doorOpen; }	
-	bool		GetHasKey() { return _hasKey; }
-	float		GetEnemyHealth() { return _enemyHealth; }
-
-	glm::vec3 GetPosition() { return _position; }
+	FACT_TYPES	GetFactType()			{ return _fact_type; }
+	float		GetConfidance()			{ return _confidance; }
+	bool		GetDoorOpen()			{ return _doorOpen; }	
+	bool		GetHasDoorKey()			{ return _hasDoorKey; }
+	bool		GetIsKeypadFixed()		{ return _iskeypadFixed; }
+	bool		GetHasToolsForKeypad()	{ return _hasToolsForKeypad; }
+	bool		GetIsToolBoxOpen()		{ return _isToolBoxOpened; }
+	bool		GetHasLockpick()		{ return _hasLockpick; }
+	bool		GetHasKeyForToolbox()	{ return _hasKeyForToolbox; }
+	int			GetKeypadCombo()		{ return _keypadCombination; }
+	float		GetEnemyHealth()		{ return _enemyHealth; }
 
 	//Setters
-	void		SetDoorOpen(bool val) { _doorOpen = val; }
-	void		SetHasKey(bool val) { _hasKey = val; }
-	void		SetEnemyHealth(float val) { _enemyHealth = val; }
+	void		SetDoorOpen(bool val)			{ _doorOpen = val; }
+	void		SetHasDoorKey(bool val)			{ _hasDoorKey = val; }
+	void		SetIsKeypadFixed(bool val)		{ _iskeypadFixed = val; }
+	void		SetHasToolsForKeypad(bool val)	{ _hasToolsForKeypad = val; }
+	void		SetIsToolBoxOpened(bool val)	{ _isToolBoxOpened = val; }
+	void		SetHasLockpick(bool val)		{ _hasLockpick = val; }
+	void		SetHasKeyForToolbox(bool val)	{ _hasKeyForToolbox = val; }
+	void		SetKeypadCombo(int val)			{ _keypadCombination = val; }
+	void		SetEnemyHealth(float val)		{ _enemyHealth = val; }
+
 
 private:
 	FACT_TYPES _fact_type;	//Fact type
 	float _confidance;		//Fact confidance value
 
-	glm::vec3 _position;	//Position
 	bool _doorOpen;			//Door open or not
-	bool _hasKey;			//Has key or not
+	bool _hasDoorKey;		//Has key or not
+	bool _iskeypadFixed;	//Door keypad fixed
+	bool _hasToolsForKeypad;//Can fix keypad
+	bool _isToolBoxOpened;	//Toolbox is open
+	bool _hasLockpick;		//Can atempt to open toolbox with lockpick
+	bool _hasKeyForToolbox;	//Can open toolbox
+	int	 _keypadCombination; //Combination for keypad
 	float _enemyHealth;		//Health Value
 };
 
@@ -151,20 +183,39 @@ public:
 	* @param val Value to default the fact to.
 	* @return void
 	*/
-	void CreateFact(FACT_TYPES type, bool val, float fval)
+	template <class T>
+	void CreateFact(FACT_TYPES type, T val)
 	{
 		MWMFact tempFact = MWMFact(type);
 		
 		switch (type)
 		{
-		case fct_door:
+		case fct_dooropen:
 			tempFact.SetDoorOpen(val);
 			break;
-		case fct_haskey:
-			tempFact.SetHasKey(val);
+		case fct_hasdoorkey:
+			tempFact.SetHasDoorKey(val);
+			break;
+		case fct_keypadfixed:
+			tempFact.SetIsKeypadFixed(val);
+			break;
+		case fct_toolsforkeypad:
+			tempFact.SetHasToolsForKeypad(val);
+			break;
+		case fct_toolboxopen:
+			tempFact.SetIsToolBoxOpened(val);
+			break;
+		case fct_lockpickfortoolbox:
+			tempFact.SetHasLockpick(val);
+			break;
+		case fct_keyfortoolbox:
+			tempFact.SetHasKeyForToolbox(val);
+			break;
+		case fct_keypadcombonote:
+			tempFact.SetKeypadCombo(val);
 			break;
 		case fct_enemyhealth:
-			tempFact.SetEnemyHealth(fval);
+			tempFact.SetEnemyHealth(val);
 		default:
 			break;
 		}

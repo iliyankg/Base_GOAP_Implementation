@@ -17,7 +17,7 @@ public:
 	bool CheckPreCons(MWMemory* state)
 	{
 		LOG("Checking Bash Door Pres");
-		int factId = state->GetConfidentFactIdx(fct_haskey);
+		int factId = state->GetConfidentFactIdx(fct_hasdoorkey);
 
 		if (factId == -1)
 			return false;
@@ -28,7 +28,7 @@ public:
 	MWMemory ApplyPostCons(MWMemory state)
 	{
 		LOG("Applying Bash Door Post Cons");
-		int factId = state.GetConfidentFactIdx(fct_door);
+		int factId = state.GetConfidentFactIdx(fct_dooropen);
 
 		state._facts[factId].SetDoorOpen(true);
 

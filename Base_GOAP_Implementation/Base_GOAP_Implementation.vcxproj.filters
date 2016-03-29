@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Actions">
+      <UniqueIdentifier>{2ebed9ba-a39b-45d0-9c3c-79f186e2fce5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -29,23 +32,23 @@
     <ClInclude Include="MPlanner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MActionOpenDoor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MActionGetKey.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MActionBashDoor.h">
+    <ClInclude Include="MGoalManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MAction.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="MActionBashDoor.h">
+      <Filter>Header Files\Actions</Filter>
     </ClInclude>
     <ClInclude Include="MActionDamageEnemy.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Actions</Filter>
     </ClInclude>
-    <ClInclude Include="MGoalManager.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="MActionGetKey.h">
+      <Filter>Header Files\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="MActionOpenDoor.h">
+      <Filter>Header Files\Actions</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

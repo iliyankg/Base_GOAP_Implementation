@@ -22,7 +22,8 @@ enum FACT_TYPES
 	fct_lockpickfortoolbox,
 	fct_keyfortoolbox,
 	fct_keypadcombonote,
-	fct_enemyhealth
+	fct_enemyhealth,
+	fct_key
 };
 
 struct MWMFact
@@ -48,6 +49,8 @@ struct MWMFact
 			return false;
 		if (left._enemyHealth != right._enemyHealth)
 			return false;
+		if (left._key != right._key)
+			return false;
 
 		return true;
 	}
@@ -66,7 +69,7 @@ struct MWMFact
 	//Fact ID
 	int ID;
 
-	//Getters
+	/*======================Getters=====================*/
 	FACT_TYPES	GetFactType()			{ return _fact_type; }
 	float		GetConfidance()			{ return _confidance; }
 	bool		GetDoorOpen()			{ return _doorOpen; }	
@@ -78,8 +81,9 @@ struct MWMFact
 	bool		GetHasKeyForToolbox()	{ return _hasKeyForToolbox; }
 	int			GetKeypadCombo()		{ return _keypadCombination; }
 	float		GetEnemyHealth()		{ return _enemyHealth; }
+	FACT_TYPES	GetKeyType()			{ return _key; }
 
-	//Setters
+	/*======================Setters=====================*/
 	void		SetDoorOpen(bool val)			{ _doorOpen = val; }
 	void		SetHasDoorKey(bool val)			{ _hasDoorKey = val; }
 	void		SetIsKeypadFixed(bool val)		{ _iskeypadFixed = val; }
@@ -89,21 +93,22 @@ struct MWMFact
 	void		SetHasKeyForToolbox(bool val)	{ _hasKeyForToolbox = val; }
 	void		SetKeypadCombo(int val)			{ _keypadCombination = val; }
 	void		SetEnemyHealth(float val)		{ _enemyHealth = val; }
-
+	void		SetKeyType(FACT_TYPES val)		{ _key = val; }
 
 private:
 	FACT_TYPES _fact_type;	//Fact type
 	float _confidance;		//Fact confidance value
 
-	bool _doorOpen;			//Door open or not
-	bool _hasDoorKey;		//Has key or not
-	bool _iskeypadFixed;	//Door keypad fixed
-	bool _hasToolsForKeypad;//Can fix keypad
-	bool _isToolBoxOpened;	//Toolbox is open
-	bool _hasLockpick;		//Can atempt to open toolbox with lockpick
-	bool _hasKeyForToolbox;	//Can open toolbox
-	int	 _keypadCombination; //Combination for keypad
-	float _enemyHealth;		//Health Value
+	bool		_doorOpen;			//Door open or not
+	bool		_hasDoorKey;		//Has key or not
+	bool		_iskeypadFixed;		//Door keypad fixed
+	bool		_hasToolsForKeypad;	//Can fix keypad
+	bool		_isToolBoxOpened;	//Toolbox is open
+	bool		_hasLockpick;		//Can atempt to open toolbox with lockpick
+	bool		_hasKeyForToolbox;	//Can open toolbox
+	int			_keypadCombination; //Combination for keypad
+	float		_enemyHealth;		//Health Value
+	FACT_TYPES	_key;				//Key that exists in the world
 };
 
 class MWMemory
@@ -124,7 +129,6 @@ public:
 		return !(left == right);
 	}
 
-
 	/** @brief Specific comparator method for a reached goal
 	*
 	* @param current State to check.
@@ -141,7 +145,7 @@ public:
 
 			if (idx == -1)
 			{
-				return false ;
+				return false;
 			}
 			else
 			{
@@ -177,12 +181,30 @@ public:
 		return index;
 	}
 
+	std::vector<int> GetAllFactsOfType(FACT_TYPES type)
+	{
+		MWMFact tempFact = _facts[0];
+		
+		std::vector<int> indecies;
+
+		for (int i = 0; i < _facts.size(); ++i)
+		{
+			if (_facts[i].GetFactType() == type)
+				indecies.push_back(i);
+		}
+
+		if (indecies.empty())
+			indecies.push_back(-1);
+		
+		return indecies;
+	}
+
 	/** @brief Creates a fact with the specified value for a default.
 	*
 	* @param type Type of fact to look for.
 	* @param val Value to default the fact to.
 	* @return void
-	*/
+	
 	template <class T>
 	void CreateFact(FACT_TYPES type, T val)
 	{
@@ -216,6 +238,48 @@ public:
 			break;
 		case fct_enemyhealth:
 			tempFact.SetEnemyHealth(val);
+			break;
+		case fct_key:
+			tempFact.SetKeyType(val);
+			break;
+		default:
+			break;
+		}
+
+		_facts.push_back(tempFact);
+		_facts.back().ID = _facts.size() - 1;
+	}*/
+
+	void CreateFact(FACT_TYPES type, bool val)
+	{
+		MWMFact tempFact = MWMFact(type);
+
+		switch (type)
+		{
+		case fct_dooropen:
+			tempFact.SetDoorOpen(val);
+			break;
+		case fct_hasdoorkey:
+			tempFact.SetHasDoorKey(val);
+			break;
+		case fct_keypadfixed:
+			tempFact.SetIsKeypadFixed(val);
+			break;
+		case fct_toolsforkeypad:
+			tempFact.SetHasToolsForKeypad(val);
+			break;
+		case fct_toolboxopen:
+			tempFact.SetIsToolBoxOpened(val);
+			break;
+		case fct_lockpickfortoolbox:
+			tempFact.SetHasLockpick(val);
+			break;
+		case fct_keyfortoolbox:
+			tempFact.SetHasKeyForToolbox(val);
+			break;
+		case fct_keypadcombonote:
+			tempFact.SetKeypadCombo(val);
+			break;
 		default:
 			break;
 		}
@@ -223,7 +287,55 @@ public:
 		_facts.push_back(tempFact);
 		_facts.back().ID = _facts.size() - 1;
 	}
-	
+	void CreateFact(FACT_TYPES type, float val)
+	{
+		MWMFact tempFact = MWMFact(type);
+
+		switch (type)
+		{
+		case fct_enemyhealth:
+			tempFact.SetEnemyHealth(val);
+			break;
+		default:
+			break;
+		}
+
+		_facts.push_back(tempFact);
+		_facts.back().ID = _facts.size() - 1;
+	}
+	void CreateFact(FACT_TYPES type, int val)
+	{
+		MWMFact tempFact = MWMFact(type);
+
+		switch (type)
+		{
+		case fct_keypadcombonote:
+			tempFact.SetKeypadCombo(val);
+			break;
+		default:
+			break;
+		}
+
+		_facts.push_back(tempFact);
+		_facts.back().ID = _facts.size() - 1;
+	}
+	void CreateFact(FACT_TYPES type, FACT_TYPES val)
+	{
+		MWMFact tempFact = MWMFact(type);
+
+		switch (type)
+		{
+		case fct_key:
+			tempFact.SetKeyType(val);
+			break;
+		default:
+			break;
+		}
+
+		_facts.push_back(tempFact);
+		_facts.back().ID = _facts.size() - 1;
+	}
+
 	//All facts in memory.
 	std::vector<MWMFact> _facts;
 };

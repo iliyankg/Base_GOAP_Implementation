@@ -9,10 +9,12 @@ MWMemory goal; //Goalstate
 
 int main()
 {
-	testing.agentMemory.CreateFact(fct_enemyhealth, 100.0f);
-	//testing.agentMemory.CreateFact(fct_haskey, false, 0.0f);
+	//testing.agentMemory.CreateFact(fct_enemyhealth, 100.0f);
+	testing.agentMemory.CreateFact(fct_key, fct_hasdoorkey);
+	testing.agentMemory.CreateFact(fct_dooropen, false);
+	testing.agentMemory.CreateFact(fct_hasdoorkey, false);
 
-	goal.CreateFact(fct_enemyhealth, 0.0f);
+	goal.CreateFact(fct_dooropen, true);
 
 	planner.Plan(testing, goal);
 

@@ -14,18 +14,26 @@ public:
 
 	bool CheckPreCons(MWMemory* state)
 	{
-		LOG("Checking Open Door Pres");
-		int factId = state->GetConfidentFactIdx(fct_hasdoorkey);
+		LOG("OPEN DOOR CHECK");
+		//Open With Key
+		int hasKeyId = state->GetConfidentFactIdx(fct_hasdoorkey);
 
-		if (factId == -1)
+		if (hasKeyId != -1)
+			return state->_facts[hasKeyId].GetHasDoorKey();
+
+		//Open With Key Combo
+		int keyPadWorksId = state->GetConfidentFactIdx(fct_keypadfixed);
+		int hasKeyComboId = state->GetConfidentFactIdx(fct_keypadcombonote);
+
+		if (keyPadWorksId == -1 || hasKeyComboId == -1)
 			return false;
-
-		return state->_facts[factId].GetHasDoorKey();
+		else
+			return state->_facts[keyPadWorksId].GetIsKeypadFixed();
 	}
 
 	MWMemory ApplyPostCons(MWMemory state)
 	{
-		LOG("Applying Open Door Post Cons");
+		LOG("OPEN DOOR APPLY");
 		int factId = state.GetConfidentFactIdx(fct_dooropen);
 
 		state._facts[factId].SetDoorOpen(true);

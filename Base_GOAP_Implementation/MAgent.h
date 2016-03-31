@@ -17,7 +17,7 @@ public:
 	static const int numAvailableActions = 4; 
 	MActionTypes agentActions[numAvailableActions] = { 
 		act_opendoor,
-		act_getkey,
+		act_getdoorkey,
 		act_bashdoor,
 		act_damageenemy };
 	

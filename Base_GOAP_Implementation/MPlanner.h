@@ -65,8 +65,11 @@ public:
 		MPlannerNode tempGoal;
 
 		for (int i = 0; i < closedSet.size(); ++i)
+		{
 			if (goal == closedSet[i].stateAtNode)
 				tempGoal = closedSet[i];
+		}
+			
 
 		LOG(tempGoal.action_edge);
 		do
@@ -129,12 +132,24 @@ public:
 				for (int i = 0; i < agent.numAvailableActions; ++i)
 				{
 					int actIndex = agent.agentActions[i];
+					
 					//Precondition check
-					if (allActions[actIndex]->CheckPreCons(&current->stateAtNode))
+					bool preconCehck = false;
+					if (dynamic_cast<MActionGetKey*>(allActions[actIndex]))
+						preconCehck = allActions[actIndex]->CheckPreCons(&current->stateAtNode, fct_hasdoorkey);
+					else
+						preconCehck = allActions[actIndex]->CheckPreCons(&current->stateAtNode);
+
+					if (preconCehck)
 					{
 						MPlannerNode tempNode;
 
-						tempNode.stateAtNode = allActions[actIndex]->ApplyPostCons(current->stateAtNode);
+						
+						if (dynamic_cast<MActionGetKey*>(allActions[actIndex]))
+							tempNode.stateAtNode = allActions[actIndex]->ApplyPostCons(current->stateAtNode, fct_hasdoorkey);
+						else
+							tempNode.stateAtNode = allActions[actIndex]->ApplyPostCons(current->stateAtNode);
+
 						tempNode.action_edge = (MActionTypes)actIndex;
 						tempNode.cameFrom = current;
 

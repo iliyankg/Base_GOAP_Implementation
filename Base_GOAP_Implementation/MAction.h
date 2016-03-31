@@ -12,7 +12,7 @@ enum MActionTypes
 {
 	badaction = -1,
 	act_opendoor,
-	act_getkey,
+	act_getdoorkey,
 	act_bashdoor,
 	act_damageenemy,
 	num_actions
@@ -33,7 +33,8 @@ public:
 	* @param state Current state to compare to.
 	* @return True or False if the action pre-conditions are met.
 	*/
-	virtual bool CheckPreCons(MWMemory* state) = 0;
+	virtual bool CheckPreCons(MWMemory* state) { LOG("BASE CHECK PRECON RAN"); return false; }
+	virtual bool CheckPreCons(MWMemory* state, FACT_TYPES type) { LOG("BASE CHECK PRECON RAN"); return false; }
 	
 	/** @brief Pure virtual method used to apply post conditions to a world state
 	*
@@ -42,5 +43,6 @@ public:
 	* @param state Current state to modify.
 	* @return A pointer ot the NEWed world state with the post conditions applied to it.
 	*/
-	virtual MWMemory ApplyPostCons(MWMemory state) = 0;
+	virtual MWMemory ApplyPostCons(MWMemory state) { LOG("BASE APPLY POST RAN"); return state; }
+	virtual MWMemory ApplyPostCons(MWMemory state, FACT_TYPES type) { LOG("BASE APPLY POST RAN"); return state; }
 };

@@ -7,19 +7,24 @@ private:
 	float _distance = 1.0f;
 
 public:
-	MActionOpenDoor()
+	MActionOpenDoor(float cost)
 	{
-		actCost = 2.0f;
+		actCost = cost;
 	}
 
 	bool CheckPreCons(MWMemory* state)
 	{
 		LOG("OPEN DOOR CHECK");
+		int factId = state->GetConfidentFactIdx(fct_dooropen);
+
+		if (factId != -1 && state->_facts[factId].GetDoorOpen())
+			return false;
+
 		//Open With Key
 		int hasKeyId = state->GetConfidentFactIdx(fct_hasdoorkey);
 
-		if (hasKeyId != -1)
-			return state->_facts[hasKeyId].GetHasDoorKey();
+		if (hasKeyId != -1 && state->_facts[hasKeyId].GetHasDoorKey())
+			return true;
 
 		//Open With Key Combo
 		int keyPadWorksId = state->GetConfidentFactIdx(fct_keypadfixed);
@@ -28,7 +33,8 @@ public:
 		if (keyPadWorksId == -1 || hasKeyComboId == -1)
 			return false;
 		else
-			return state->_facts[keyPadWorksId].GetIsKeypadFixed();
+			if(state->_facts[hasKeyComboId].GetKeypadCombo() == 1234)
+				return state->_facts[keyPadWorksId].GetIsKeypadFixed();
 	}
 
 	MWMemory ApplyPostCons(MWMemory state)

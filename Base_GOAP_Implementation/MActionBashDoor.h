@@ -7,9 +7,9 @@ private:
 	float _distance = 1.0f;
 
 public:
-	MActionBashDoor()
+	MActionBashDoor(float cost)
 	{
-		actCost = 5.0f;
+		actCost = cost;
 	}
 
 	void CheckPreCons() {}
@@ -17,12 +17,12 @@ public:
 	bool CheckPreCons(MWMemory* state)
 	{
 		LOG("BASH DOOR CHECK");
-		int factId = state->GetConfidentFactIdx(fct_hasdoorkey);
+		int factId = state->GetConfidentFactIdx(fct_dooropen);
 
-		if (factId == -1)
+		if (factId != -1)
+			return !state->_facts[factId].GetDoorOpen();
+		else
 			return false;
-
-		return true;
 	}
 
 	MWMemory ApplyPostCons(MWMemory state)

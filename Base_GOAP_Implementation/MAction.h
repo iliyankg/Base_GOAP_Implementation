@@ -15,6 +15,9 @@ enum MActionTypes
 	act_getdoorkey,
 	act_bashdoor,
 	act_damageenemy,
+	act_fixkeypad,
+	act_getkeypadcode,
+	act_gettoolsforkeypad,
 	num_actions
 };
 

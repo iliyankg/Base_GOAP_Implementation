@@ -50,5 +50,14 @@
     <ClInclude Include="MActionOpenDoor.h">
       <Filter>Header Files\Actions</Filter>
     </ClInclude>
+    <ClInclude Include="MActionGetKeypadCombo.h">
+      <Filter>Header Files\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="MActionGetToolsForKeypad.h">
+      <Filter>Header Files\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="MActionFixKeypad.h">
+      <Filter>Header Files\Actions</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -9,16 +9,33 @@ private:
 	float _distance = 1.0f;
 
 public:
-	MActionGetKey()
+	MActionGetKey(float cost)
 	{
-		actCost = 1.0f;
+		actCost = cost;
 	}
-
-	void CheckPreCons() {}
 	
 	bool CheckPreCons(MWMemory* state, FACT_TYPES keyType) 
 	{
 		LOG("GET KEY CHECK");
+		int keyTypeId = state->GetConfidentFactIdx(keyType);
+
+		if (keyTypeId != -1)
+		{
+			switch (keyType)
+			{
+			case fct_hasdoorkey:
+				if (state->_facts[keyTypeId].GetHasDoorKey())
+					return false;
+				break;
+			case fct_keyfortoolbox:
+				if (state->_facts[keyTypeId].GetHasKeyForToolbox())
+					return false;
+				break;
+			default:
+				break;
+			}
+		}	
+
 		std::vector<int> factIds = state->GetAllFactsOfType(fct_key);
 
 		if (factIds[0] == -1)
@@ -42,7 +59,7 @@ public:
 		for (int i = 0; i < factIds.size(); ++i)
 		{
 			if (state._facts[factIds[i]].GetKeyType() == keyType)
-				actualId = i;
+				actualId = factIds[i];
 		}
 
 		int tempFactId = -1;

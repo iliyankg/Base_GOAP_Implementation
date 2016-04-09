@@ -14,12 +14,16 @@ public:
 	~MAgent() {}
 
 	MActionTypes currentAction = badaction;
-	static const int numAvailableActions = 4; 
+	static const int numAvailableActions = 7; 
 	MActionTypes agentActions[numAvailableActions] = { 
 		act_opendoor,
 		act_getdoorkey,
 		act_bashdoor,
-		act_damageenemy };
+		act_damageenemy,
+		act_fixkeypad,
+		act_getkeypadcode,
+		act_gettoolsforkeypad
+	};
 	
 	MGoalTypes currentGoal = badgoal;
 	static const int numAvailableGoals = 2; 

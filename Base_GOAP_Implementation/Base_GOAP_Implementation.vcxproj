@@ -119,8 +119,11 @@
   <ItemGroup>
     <ClInclude Include="MActionBashDoor.h" />
     <ClInclude Include="MActionDamageEnemy.h" />
+    <ClInclude Include="MActionFixKeypad.h" />
     <ClInclude Include="MActionGetKey.h" />
     <ClInclude Include="MAction.h" />
+    <ClInclude Include="MActionGetKeypadCombo.h" />
+    <ClInclude Include="MActionGetToolsForKeypad.h" />
     <ClInclude Include="MActionOpenDoor.h" />
     <ClInclude Include="MAgent.h" />
     <ClInclude Include="MGoalManager.h" />

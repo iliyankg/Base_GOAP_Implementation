@@ -12,16 +12,22 @@
 #include <iostream>
 
 #include "MWorkingMemory.h"
+
 #include "MActionOpenDoor.h"
 #include "MActionGetKey.h"
 #include "MActionBashDoor.h"
 #include "MActionDamageEnemy.h"
+#include "MActionFixKeypad.h"
+#include "MActionGetKeypadCombo.h"
+#include "MActionGetToolsForKeypad.h"
 
 struct MPlannerNode
 {
 	//Operator overloads
 	friend bool operator== (const MPlannerNode& left, const MPlannerNode& right)
 	{
+		if (left.stateAtNode._facts.size() != right.stateAtNode._facts.size())
+			return false;
 		if (left.action_edge == right.action_edge && left.stateAtNode == right.stateAtNode)
 			return true;
 		else 
@@ -46,10 +52,13 @@ public:
 	MPLanner() 
 	{
 		LOG("Created Planner");
-		allActions.push_back(new MActionOpenDoor());
-		allActions.push_back(new MActionGetKey());
-		allActions.push_back(new MActionBashDoor());
-		allActions.push_back(new MActionDamageEnemy());
+		allActions.push_back(new MActionOpenDoor(1.0f));
+		allActions.push_back(new MActionGetKey(1.0f));
+		allActions.push_back(new MActionBashDoor(10.0f));
+		allActions.push_back(new MActionDamageEnemy(1.0f));
+		allActions.push_back(new MActionFixKeypad(1.0f));
+		allActions.push_back(new MActionGetKeypadCombo(1.0f));
+		allActions.push_back(new MActionGetToolsForKeypad(1.0f));
 	}
 	~MPLanner() {}
 	
@@ -67,16 +76,20 @@ public:
 		for (int i = 0; i < closedSet.size(); ++i)
 		{
 			if (goal == closedSet[i].stateAtNode)
+			{
 				tempGoal = closedSet[i];
+				i = closedSet.size();
+			}
+				
 		}
 			
 
 		LOG(tempGoal.action_edge);
-		do
+		while (tempGoal.stateAtNode != start)
 		{
 			tempGoal = *tempGoal.cameFrom;
 			LOG(tempGoal.action_edge);
-		} while (tempGoal.stateAtNode != start);
+		}
 
 		std::cout << "TOP ZOZZLE" << std::endl;
 	}
@@ -109,15 +122,14 @@ public:
 		tempStart.g = 0.0f;
   		tempStart.h = CalculateHeuristic(start, goal);
 		tempStart.f = tempStart.h + tempStart.g;
-		openSet.push_back(tempStart);
-		
+		openSet.push_back(tempStart);	
+
 		do
 		{
+			LOG(std::endl)
 			MPlannerNode* current = new MPlannerNode(openSet[0]);
 			openSet.erase(openSet.begin());
 			closedSet.push_back(*current);
-
-			openSet.clear();
 			
 			if (MWMemory::IsGoalReached(current->stateAtNode, goal))
 			{
@@ -127,6 +139,17 @@ public:
 				return;
 			}
 
+			bool checkBothActions = false;
+			bool applyBothActions = false;
+
+			FACT_TYPES singularTypeToCheck = invalid;
+			if (CheckDoubleKeyAction(&singularTypeToCheck, goal))
+			{
+				checkBothActions = true;
+				applyBothActions = true;
+			}
+			
+
 			if (!isRouteFound)
 			{
 				for (int i = 0; i < agent.numAvailableActions; ++i)
@@ -135,18 +158,30 @@ public:
 					
 					//Precondition check
 					bool preconCehck = false;
-					if (dynamic_cast<MActionGetKey*>(allActions[actIndex]))
-						preconCehck = allActions[actIndex]->CheckPreCons(&current->stateAtNode, fct_hasdoorkey);
+					if (dynamic_cast<MActionGetKey*>(allActions[actIndex]) && checkBothActions)
+					{
+						preconCehck = allActions[actIndex]->CheckPreCons(&current->stateAtNode, fct_keyfortoolbox);
+						singularTypeToCheck = fct_hasdoorkey;
+						i--;
+						checkBothActions = false;
+					}
+					else if (dynamic_cast<MActionGetKey*>(allActions[actIndex]))
+						preconCehck = allActions[actIndex]->CheckPreCons(&current->stateAtNode, singularTypeToCheck);
 					else
 						preconCehck = allActions[actIndex]->CheckPreCons(&current->stateAtNode);
+
+						
 
 					if (preconCehck)
 					{
 						MPlannerNode tempNode;
-
-						
-						if (dynamic_cast<MActionGetKey*>(allActions[actIndex]))
-							tempNode.stateAtNode = allActions[actIndex]->ApplyPostCons(current->stateAtNode, fct_hasdoorkey);
+						if (dynamic_cast<MActionGetKey*>(allActions[actIndex]) && applyBothActions)
+						{
+							tempNode.stateAtNode = allActions[actIndex]->ApplyPostCons(current->stateAtNode, fct_keyfortoolbox);
+							applyBothActions = false;
+						}
+						else if (dynamic_cast<MActionGetKey*>(allActions[actIndex]))
+							tempNode.stateAtNode = allActions[actIndex]->ApplyPostCons(current->stateAtNode, singularTypeToCheck);
 						else
 							tempNode.stateAtNode = allActions[actIndex]->ApplyPostCons(current->stateAtNode);
 
@@ -187,6 +222,32 @@ public:
 	}
 
 private:
+
+	bool CheckDoubleKeyAction(FACT_TYPES* singularType, MWMemory goal)
+	{
+		int idxOne = goal.GetConfidentFactIdx(fct_hasdoorkey);
+		int idxTwo = goal.GetConfidentFactIdx(fct_keyfortoolbox);
+
+		FACT_TYPES singularTypeToCheck = invalid;
+
+		if (idxOne != -1 && idxTwo != -1)
+		{
+			if (goal._facts[idxOne].GetHasDoorKey() && goal._facts[idxTwo].GetHasKeyForToolbox())
+			{
+				return true;
+			}
+			else if (goal._facts[idxOne].GetHasDoorKey())
+				singularTypeToCheck = fct_hasdoorkey;
+			else if (goal._facts[idxTwo].GetHasKeyForToolbox())
+				singularTypeToCheck = fct_keyfortoolbox;
+		}
+		else if (idxOne != -1 && goal._facts[idxOne].GetHasDoorKey())
+			singularTypeToCheck = fct_hasdoorkey;
+		else if (idxTwo != -1 && goal._facts[idxTwo].GetHasKeyForToolbox())
+			singularTypeToCheck = fct_keyfortoolbox;
+		else
+			return false;
+	}
 
 	/** @brief Calculates the heuristic between two world states.
 	*

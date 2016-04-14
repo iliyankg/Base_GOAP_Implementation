@@ -26,13 +26,15 @@ public:
 	};
 	
 	MGoalTypes currentGoal = badgoal;
-	static const int numAvailableGoals = 2; 
+	static const int numAvailableGoals = 3; 
 	MGoalTypes agentGoals[numAvailableGoals] = { 
 		goal_killenemy,
-		goal_opendoor };
+		goal_opendoorkey,
+		goal_opendoorcombo};
 	
 	std::vector<MActionTypes> actionsForCurrentPlan;
 
 	MGoalManager goalManager;
 	MWMemory agentMemory;
+	MWMemory goalMemory;
 };

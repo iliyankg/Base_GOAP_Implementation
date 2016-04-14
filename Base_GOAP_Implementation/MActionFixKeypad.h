@@ -36,4 +36,12 @@ public:
 
 		return state;
 	}
+
+	void PerformAction(MWMemory &state)
+	{
+		int factId = state.GetConfidentFactIdx(fct_keypadfixed);
+
+		state._facts[factId].SetIsKeypadFixed(true);
+
+	}
 };

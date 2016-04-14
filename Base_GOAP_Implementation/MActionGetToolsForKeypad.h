@@ -39,4 +39,12 @@ public:
 		return state;
 	}
 
+	void PerformAction(MWMemory &state)
+	{
+		int factId = state.GetConfidentFactIdx(fct_toolsforkeypad);
+
+		state._facts[factId].SetHasToolsForKeypad(true);
+
+	}
+
 };

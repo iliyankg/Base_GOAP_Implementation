@@ -69,7 +69,7 @@ public:
 	*
 	* @return Void
 	*/
-	void PrintPlan(MWMemory& goal, MWMemory& start)
+	void PrintPlan(MWMemory& goal, MWMemory& start, std::vector<MActionTypes>* toReturn)
 	{
 		MPlannerNode tempGoal;
 
@@ -85,10 +85,12 @@ public:
 			
 
 		LOG(tempGoal.action_edge);
+		toReturn->push_back(tempGoal.action_edge);
 		while (tempGoal.stateAtNode != start)
 		{
 			tempGoal = *tempGoal.cameFrom;
 			LOG(tempGoal.action_edge);
+			toReturn->push_back(tempGoal.action_edge);
 		}
 
 		std::cout << "TOP ZOZZLE" << std::endl;
@@ -106,11 +108,16 @@ public:
 	* @param goal Goal World state.
 	* @return void
 	*/
-	void Plan(MAgent& agent, MWMemory& goal)
+	std::vector<MActionTypes> Plan(MAgent agent)
 	{
+		std::vector<MActionTypes> toReturn;
+		openSet.clear();
+		closedSet.clear();
+
 		LOG("Starting Planning");
 
 		MWMemory start = agent.agentMemory;
+		MWMemory goal = agent.goalManager.GetNewGoal(start, agent.numAvailableGoals, agent.agentGoals, agent.goalMemory);
 
 		bool isRouteFound = false;
 		
@@ -130,20 +137,21 @@ public:
 			MPlannerNode* current = new MPlannerNode(openSet[0]);
 			openSet.erase(openSet.begin());
 			closedSet.push_back(*current);
-			
+
 			if (MWMemory::IsGoalReached(current->stateAtNode, goal))
 			{
 				LOG("Plan Found");
 				isRouteFound = true;
-				PrintPlan(goal, start);
-				return;
+				PrintPlan(goal, start, &toReturn);
+				std::reverse(toReturn.begin(), toReturn.end());
+				return toReturn;
 			}
 
 			bool checkBothActions = false;
 			bool applyBothActions = false;
 
 			FACT_TYPES singularTypeToCheck = invalid;
-			if (CheckDoubleKeyAction(&singularTypeToCheck, goal))
+			if (CheckDoubleKeyAction(singularTypeToCheck, current->stateAtNode))
 			{
 				checkBothActions = true;
 				applyBothActions = true;
@@ -223,9 +231,21 @@ public:
 
 private:
 
-	bool CheckDoubleKeyAction(FACT_TYPES* singularType, MWMemory goal)
+	bool CheckDoubleKeyAction(FACT_TYPES& singularType, MWMemory goal)
 	{
-		int idxOne = goal.GetConfidentFactIdx(fct_hasdoorkey);
+		std::vector<int> keys = goal.GetAllFactsOfType(fct_key);
+
+		if (keys[0] == -1)
+			return false;
+		else if (keys.size() == 2)
+			return true;
+		else
+		{
+			singularType = goal._facts[goal.GetConfidentFactIdx(fct_key)].GetKeyType();
+			return false;
+		}
+		
+		/*int idxOne = goal.GetConfidentFactIdx(fct_hasdoorkey);
 		int idxTwo = goal.GetConfidentFactIdx(fct_keyfortoolbox);
 
 		FACT_TYPES singularTypeToCheck = invalid;
@@ -237,16 +257,28 @@ private:
 				return true;
 			}
 			else if (goal._facts[idxOne].GetHasDoorKey())
-				singularTypeToCheck = fct_hasdoorkey;
+			{
+				singularType = fct_hasdoorkey;
+				return false;
+			}
 			else if (goal._facts[idxTwo].GetHasKeyForToolbox())
-				singularTypeToCheck = fct_keyfortoolbox;
+			{
+				singularType = fct_keyfortoolbox;
+				return false;
+			}
 		}
 		else if (idxOne != -1 && goal._facts[idxOne].GetHasDoorKey())
-			singularTypeToCheck = fct_hasdoorkey;
-		else if (idxTwo != -1 && goal._facts[idxTwo].GetHasKeyForToolbox())
-			singularTypeToCheck = fct_keyfortoolbox;
-		else
+		{
+			singularType = fct_hasdoorkey;
 			return false;
+		}
+		else if (idxTwo != -1 && goal._facts[idxTwo].GetHasKeyForToolbox())
+		{
+			singularType = fct_keyfortoolbox;
+			return false;
+		}
+		else
+			return false;*/
 	}
 
 	/** @brief Calculates the heuristic between two world states.

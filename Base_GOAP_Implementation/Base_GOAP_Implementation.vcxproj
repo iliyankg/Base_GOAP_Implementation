@@ -126,8 +126,10 @@
     <ClInclude Include="MActionGetToolsForKeypad.h" />
     <ClInclude Include="MActionOpenDoor.h" />
     <ClInclude Include="MAgent.h" />
+    <ClInclude Include="MainLoopHelpers.h" />
     <ClInclude Include="MGoalManager.h" />
     <ClInclude Include="MPlanner.h" />
+    <ClInclude Include="MRoomManager.h" />
     <ClInclude Include="MWorkingMemory.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -35,4 +35,15 @@ public:
 
 		return state;
 	}
+
+	void PerformAction(MWMemory &state)
+	{
+		int factId = state.GetConfidentFactIdx(fct_enemyhealth);
+
+		state._facts[factId].SetEnemyHealth(state._facts[factId].GetEnemyHealth() - 10.0f);
+
+		if (state._facts[factId].GetEnemyHealth() <= 0.0f)
+			state._facts.erase(state._facts.begin() + factId);
+
+	}
 };

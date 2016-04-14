@@ -59,5 +59,11 @@
     <ClInclude Include="MActionFixKeypad.h">
       <Filter>Header Files\Actions</Filter>
     </ClInclude>
+    <ClInclude Include="MRoomManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainLoopHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -167,6 +167,7 @@ public:
 	int GetConfidentFactIdx(FACT_TYPES type) const 
 	{
 		MWMFact tempFact = _facts[0];
+		tempFact.SetConfidance(0.0f);
 
 		int index = -1;
 

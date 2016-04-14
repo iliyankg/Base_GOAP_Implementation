@@ -33,4 +33,12 @@ public:
 
 		return state;
 	}
+
+	void PerformAction(MWMemory &state)
+	{
+		int factId = state.GetConfidentFactIdx(fct_keypadcombonote);
+
+		state._facts[factId].SetKeypadCombo(1234);
+
+	}
 };

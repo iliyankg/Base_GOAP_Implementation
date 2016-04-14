@@ -46,4 +46,12 @@ public:
 
 		return state;
 	}
+
+	void PerformAction(MWMemory &state)
+	{
+		int factId = state.GetConfidentFactIdx(fct_dooropen);
+
+		state._facts[factId].SetDoorOpen(true);
+
+	}
 };

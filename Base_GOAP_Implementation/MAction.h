@@ -48,4 +48,7 @@ public:
 	*/
 	virtual MWMemory ApplyPostCons(MWMemory state) { LOG("BASE APPLY POST RAN"); return state; }
 	virtual MWMemory ApplyPostCons(MWMemory state, FACT_TYPES type) { LOG("BASE APPLY POST RAN"); return state; }
+
+	virtual void PerformAction(MWMemory &state) { LOG("BASE PERFORM RAN"); }
+	virtual void PerformAction(MWMemory &state, FACT_TYPES type) { LOG("BASE PERFORM RAN"); }
 };

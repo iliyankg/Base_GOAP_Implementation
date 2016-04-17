@@ -4,6 +4,9 @@
 #include <chrono>
 #include <fstream>
 
+#include <thread>
+#include <future>
+
 #include "MAction.h"
 #include "MWorkingMemory.h"
 #include "MPlanner.h"
@@ -51,5 +54,14 @@ namespace mlh
 		auto time = std::chrono::duration_cast<std::chrono::microseconds>(tTwo - tOne).count();
 
 		LOG(label << ": " << time);
+	}
+
+	std::vector<MActionTypes> WorkerFunction(MPLanner planner, MAgent agent)
+	{
+		return planner.Plan(agent);
+	}
+	void SecondaryWorkerFunction(MPLanner planner, MAgent agent, std::vector<MActionTypes>& toReturn)
+	{
+		toReturn = planner.Plan(agent);
 	}
 }

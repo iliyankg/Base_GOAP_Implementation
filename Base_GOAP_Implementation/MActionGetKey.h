@@ -16,7 +16,6 @@ public:
 	
 	bool CheckPreCons(MWMemory* state, FACT_TYPES keyType) 
 	{
-		LOG("GET KEY CHECK");
 		int keyTypeId = state->GetConfidentFactIdx(keyType);
 
 		if (keyTypeId != -1)
@@ -51,7 +50,6 @@ public:
 
 	MWMemory ApplyPostCons(MWMemory state, FACT_TYPES keyType)
 	{
-		LOG("GET KEY APPLY");
 		std::vector<int> factIds = state.GetAllFactsOfType(fct_key);
 
 		int actualId = -1;
@@ -89,17 +87,6 @@ public:
 		}
 
 		return state;
-
-
-		//LOG("Applying Get Key Post Cons");
-		//int factId = state.GetConfidentFactIdx(fct_hasdoorkey);
-		//
-		//if (factId == -1)
-		//	state.CreateFact(fct_hasdoorkey, true);
-		//else
-		//	state._facts[factId].SetHasDoorKey(true);
-
-		//return state;
 	}
 	
 	void PerformAction(MWMemory &state, FACT_TYPES keyType)
@@ -119,7 +106,7 @@ public:
 		switch (keyType)
 		{
 		case fct_hasdoorkey:
-			state._facts.erase(state._facts.begin() + actualId);
+			//state._facts.erase(state._facts.begin() + actualId);
 			tempFactId = state.GetConfidentFactIdx(fct_hasdoorkey);
 
 			if (tempFactId == -1)
@@ -128,7 +115,7 @@ public:
 				state._facts[tempFactId].SetHasDoorKey(true);
 			break;
 		case fct_keyfortoolbox:
-			state._facts.erase(state._facts.begin() + actualId);
+			//state._facts.erase(state._facts.begin() + actualId);
 			tempFactId = state.GetConfidentFactIdx(fct_keyfortoolbox);
 
 			if (tempFactId == -1)

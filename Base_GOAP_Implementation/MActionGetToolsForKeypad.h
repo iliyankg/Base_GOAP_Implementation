@@ -12,7 +12,6 @@ public:
 
 	bool CheckPreCons(MWMemory* state)
 	{
-		LOG("GET TOOLS CHECK");
 		int repeatCheckId = state->GetConfidentFactIdx(fct_toolsforkeypad);
 
 		if (repeatCheckId != -1 && state->_facts[repeatCheckId].GetHasToolsForKeypad())
@@ -31,7 +30,6 @@ public:
 
 	MWMemory ApplyPostCons(MWMemory state)
 	{
-		LOG("GET TOOLS APPLY");
 		int factId = state.GetConfidentFactIdx(fct_toolsforkeypad);
 
 		state._facts[factId].SetHasToolsForKeypad(true);

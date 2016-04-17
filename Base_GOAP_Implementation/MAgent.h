@@ -9,7 +9,7 @@ class MAgent
 public:
 	MAgent()
 	{
-
+		actionsForCurrentPlan.clear();
 	}
 	~MAgent() {}
 

@@ -12,7 +12,6 @@ public:
 
 	bool CheckPreCons(MWMemory* state)
 	{
-		LOG("KEYPAD FIX CHECK");
 		int keypadFixedId = state->GetConfidentFactIdx(fct_keypadfixed);
 
 		if (keypadFixedId != -1 && state->_facts[keypadFixedId].GetIsKeypadFixed())
@@ -29,7 +28,6 @@ public:
 
 	MWMemory ApplyPostCons(MWMemory state)
 	{
-		LOG("KEYPAD FIX APPLY");
 		int factId = state.GetConfidentFactIdx(fct_keypadfixed);
 
 		state._facts[factId].SetIsKeypadFixed(true);

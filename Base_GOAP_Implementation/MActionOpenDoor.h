@@ -14,7 +14,6 @@ public:
 
 	bool CheckPreCons(MWMemory* state)
 	{
-		LOG("OPEN DOOR CHECK");
 		int factId = state->GetConfidentFactIdx(fct_dooropen);
 
 		if (factId != -1 && state->_facts[factId].GetDoorOpen())
@@ -39,7 +38,6 @@ public:
 
 	MWMemory ApplyPostCons(MWMemory state)
 	{
-		LOG("OPEN DOOR APPLY");
 		int factId = state.GetConfidentFactIdx(fct_dooropen);
 
 		state._facts[factId].SetDoorOpen(true);
@@ -52,6 +50,5 @@ public:
 		int factId = state.GetConfidentFactIdx(fct_dooropen);
 
 		state._facts[factId].SetDoorOpen(true);
-
 	}
 };

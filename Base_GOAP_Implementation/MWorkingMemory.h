@@ -137,9 +137,9 @@ public:
 	*/
 	static inline bool IsGoalReached(MWMemory& current, MWMemory& goal)
 	{
-		float counter = 0;
+		int fctSize = goal._facts.size();
 
-		for (int i = 0; i < goal._facts.size(); ++i)
+		for (int i = 0; i < fctSize; ++i)
 		{
 			int idx = current.GetConfidentFactIdx(goal._facts[i].GetFactType());
 
@@ -171,7 +171,9 @@ public:
 
 		int index = -1;
 
-		for (int i = 0; i < _facts.size(); ++i)
+		int factSize = _facts.size();
+
+		for (int i = 0; i < factSize; ++i)
 		{
 			if (_facts[i].GetFactType() == type && _facts[i].GetConfidance() >= tempFact.GetConfidance())
 			{

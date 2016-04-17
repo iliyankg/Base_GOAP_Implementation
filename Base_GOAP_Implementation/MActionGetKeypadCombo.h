@@ -12,7 +12,6 @@ public:
 
 	bool CheckPreCons(MWMemory* state)
 	{
-		LOG("GET COMBO CHECK");
 		int comboId = state->GetConfidentFactIdx(fct_keypadcombonote);
 
 		if (comboId != -1 && state->_facts[comboId].GetKeypadCombo() == 1234)
@@ -26,7 +25,6 @@ public:
 
 	MWMemory ApplyPostCons(MWMemory state)
 	{
-		LOG("COMBO APPLY");
 		int factId = state.GetConfidentFactIdx(fct_keypadcombonote);
 
 		state._facts[factId].SetKeypadCombo(1234);

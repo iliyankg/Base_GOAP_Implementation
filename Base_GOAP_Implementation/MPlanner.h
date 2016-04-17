@@ -10,6 +10,7 @@
 
 #pragma once
 #include <iostream>
+#include <memory>
 
 #include "MWorkingMemory.h"
 
@@ -23,6 +24,15 @@
 
 struct MPlannerNode
 {
+	MPlannerNode()
+	{
+		cameFrom = nullptr;
+	}
+
+	~MPlannerNode()
+	{
+	}
+
 	//Operator overloads
 	friend bool operator== (const MPlannerNode& left, const MPlannerNode& right)
 	{
@@ -43,7 +53,7 @@ struct MPlannerNode
 	float h;					//Huristic at node.
 	float f;					//G + H cost 
 	MActionTypes action_edge;	//Action used to get to this node.
-	MPlannerNode* cameFrom;		//Node arived from
+	std::shared_ptr<MPlannerNode> cameFrom;		//Node arived from
 };
 
 class MPLanner
@@ -92,8 +102,6 @@ public:
 			LOG(tempGoal.action_edge);
 			toReturn->push_back(tempGoal.action_edge);
 		}
-
-		std::cout << "TOP ZOZZLE" << std::endl;
 	}
 
 	std::vector<MPlannerNode> openSet;		//Open set at for A Star
@@ -134,7 +142,8 @@ public:
 		do
 		{
 			LOG(std::endl)
-			MPlannerNode* current = new MPlannerNode(openSet[0]);
+			std::shared_ptr<MPlannerNode> current(new MPlannerNode(openSet[0]));
+
 			openSet.erase(openSet.begin());
 			closedSet.push_back(*current);
 
@@ -144,6 +153,7 @@ public:
 				isRouteFound = true;
 				PrintPlan(goal, start, &toReturn);
 				std::reverse(toReturn.begin(), toReturn.end());
+				toReturn.erase(toReturn.begin());
 				return toReturn;
 			}
 
@@ -203,17 +213,13 @@ public:
 						//Check if in closed
 						if (!IsInClosed(tempNode))
 						{
-							LOG("Not In Closed");
-
 							int idx;
 							if (!IsInOpen(tempNode, idx))
 							{
-								LOG("Not In Opened");
 								OrderedInsertion(openSet, tempNode);
 							}
 							else
 							{
-								LOG("In Opened");
 								if (current->f + CalculateHeuristic(current->stateAtNode, tempNode.stateAtNode) < openSet[idx].f)
 								{
 									openSet[idx].g = current->g + CalculateHeuristic(current->stateAtNode, openSet[idx].stateAtNode);
@@ -244,41 +250,6 @@ private:
 			singularType = goal._facts[goal.GetConfidentFactIdx(fct_key)].GetKeyType();
 			return false;
 		}
-		
-		/*int idxOne = goal.GetConfidentFactIdx(fct_hasdoorkey);
-		int idxTwo = goal.GetConfidentFactIdx(fct_keyfortoolbox);
-
-		FACT_TYPES singularTypeToCheck = invalid;
-
-		if (idxOne != -1 && idxTwo != -1)
-		{
-			if (goal._facts[idxOne].GetHasDoorKey() && goal._facts[idxTwo].GetHasKeyForToolbox())
-			{
-				return true;
-			}
-			else if (goal._facts[idxOne].GetHasDoorKey())
-			{
-				singularType = fct_hasdoorkey;
-				return false;
-			}
-			else if (goal._facts[idxTwo].GetHasKeyForToolbox())
-			{
-				singularType = fct_keyfortoolbox;
-				return false;
-			}
-		}
-		else if (idxOne != -1 && goal._facts[idxOne].GetHasDoorKey())
-		{
-			singularType = fct_hasdoorkey;
-			return false;
-		}
-		else if (idxTwo != -1 && goal._facts[idxTwo].GetHasKeyForToolbox())
-		{
-			singularType = fct_keyfortoolbox;
-			return false;
-		}
-		else
-			return false;*/
 	}
 
 	/** @brief Calculates the heuristic between two world states.
@@ -353,6 +324,7 @@ private:
 			}
 		}
 		openIdx = -1;
+
 		return false;
 	}
 };
